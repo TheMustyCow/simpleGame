@@ -15,6 +15,8 @@ const PLAYER_X = 190;
 const AI_X = WIDTH - PLAYER_X;
 const CENTER_X = WIDTH / 2;
 const START_HP = 3;
+const AI_STAY_LANE_WEIGHT = 1;
+const AI_MOVE_LANE_WEIGHT = 3;
 const TEXT_STYLE = {
   fontFamily: 'Georgia, Times New Roman, serif',
 };
@@ -425,7 +427,7 @@ class QuickDrawScene extends Phaser.Scene {
   setupRound() {
     this.clearRoundTimer();
     this.state = GameState.AIMING;
-    this.pendingAiLane = Phaser.Math.Between(0, 2);
+    this.pendingAiLane = this.pickAiLane();
     this.aiTargetLane = Phaser.Math.Between(0, 2);
     this.aiRevealed = false;
 
@@ -440,6 +442,15 @@ class QuickDrawScene extends Phaser.Scene {
     this.moveShooterToLane(this.player, this.playerLane, false);
     this.updateLaneHighlights();
     this.updateTargetMarker();
+  }
+
+  pickAiLane() {
+    const weightedLanes = LANES.flatMap((_, laneIndex) => {
+      const weight = laneIndex === this.aiLane ? AI_STAY_LANE_WEIGHT : AI_MOVE_LANE_WEIGHT;
+      return Array(weight).fill(laneIndex);
+    });
+
+    return Phaser.Utils.Array.GetRandom(weightedLanes);
   }
 
   movePlayer(direction) {
