@@ -57,3 +57,6 @@ npm run dev      # Start the local development server
 npm run build    # Build for production
 npm run preview  # Preview the production build
 ```
+
+## What it looks like
+![](assets/readmeScreenshot.png)
