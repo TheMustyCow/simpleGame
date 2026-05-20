@@ -6,6 +6,9 @@ The player and AI face off across a three-lane arena. Pick your lane, choose a t
 
 ## Play
 
+- Go to https://simple-game-beryl.vercel.app/ to try.
+- Or:
+
 ```bash
 npm install
 npm run dev
