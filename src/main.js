@@ -111,6 +111,7 @@ class QuickDrawScene extends Phaser.Scene {
     this.aiLane = 1;
     this.pendingAiLane = 1;
     this.aiTargetLane = 1;
+    this.aiStayedLastRound = false;
     this.aiRevealed = false;
     this.state = GameState.START;
     this.roundTimer = null;
@@ -445,6 +446,10 @@ class QuickDrawScene extends Phaser.Scene {
   }
 
   pickAiLane() {
+    if (!this.aiStayedLastRound) {
+      return Phaser.Math.Between(0, LANES.length - 1);
+    }
+
     const weightedLanes = LANES.flatMap((_, laneIndex) => {
       const weight = laneIndex === this.aiLane ? AI_STAY_LANE_WEIGHT : AI_MOVE_LANE_WEIGHT;
       return Array(weight).fill(laneIndex);
@@ -493,6 +498,7 @@ class QuickDrawScene extends Phaser.Scene {
     const lockedAiLane = this.pendingAiLane;
     const lockedAiTargetLane = this.aiTargetLane;
 
+    this.aiStayedLastRound = lockedAiLane === this.aiLane;
     this.aiLane = lockedAiLane;
     this.aiRevealed = true;
     this.countdownText.setFontSize(58);
@@ -731,6 +737,7 @@ class QuickDrawScene extends Phaser.Scene {
     this.aiLane = 1;
     this.pendingAiLane = 1;
     this.aiTargetLane = 1;
+    this.aiStayedLastRound = false;
     this.aiRevealed = false;
     this.player.y = LANES[this.playerLane].y;
     this.ai.y = LANES[this.aiLane].y;
